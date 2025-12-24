@@ -174,7 +174,18 @@ Colab通常使用的是Tesla T4(16GB顯存)。跑yolov5m非常輕鬆。跑yolov5
 
 !python train.py --img 640 --batch 16 --epochs 300 --data ../mask/data.yaml --cfg models/yolov5m.yaml --weights ''
 
+![image](25.png)
 
+訓練得到的權重檔案存放在 runs/train/exp7/weights/ 資料夾中
 
+![image](26.png)
 
+輸出結果如下圖所示。結果提示辨識到了2個戴口罩，2個未戴口罩。
 
+![image](27.png)
+
+識別後的結果存放在資料夾runs/detect/exp3中。打開該資料夾中的mask.jpg文件，識別結果如下圖所示。
+
+![image](result_yolov5m.jpg)
+
+雖然還是可以看到一個漏檢，但已經可以準確判斷為4個人，並且準確判斷有戴口罩和沒戴口罩的信心度都有增加。
