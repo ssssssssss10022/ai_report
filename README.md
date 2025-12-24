@@ -167,8 +167,12 @@ Colab通常使用的是Tesla T4(16GB顯存)。跑yolov5m非常輕鬆。跑yolov5
 理由三：過擬合風險 
 數據集看起來不算巨大。如果模型太大（如5x），參數甚至比你的數據還多，模型會傾向於「死記硬背」訓練集，導致在驗證集或真實場景下表現反而變差（過擬合）。
 
+![image](table.png)
 
+### 如何切換到YOLOv5m？
+非常簡單，你只需要修改訓練命令中的 --weights 參數，系統會自動下載並使用新模型。
 
+!python train.py --img 640 --batch 16 --epochs 300 --data ../mask/data.yaml --cfg models/yolov5m.yaml --weights ''
 
 
 
