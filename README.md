@@ -12,39 +12,47 @@ Colab網址：(https://colab.research.google.com/notebooks/welcome.ipynb)
 
 進入Colab後第一步是新建一個筆記本，如下圖所示。
 
-![image](https://github.com/kevin945290/AI_report/blob/main/1.png)
+![image](1.png)
 
-修改檔名，並點選"+程式碼"新增程式碼區塊
-![image](https://github.com/kevin945290/AI_report/blob/main/2.png)
+選擇程式碼執行程序→ 更改運行時類型
 
-現在，我們就可以在程式碼框中輸入一些程式碼。這裡注意，如果我們直接輸入程式碼，系統就會當作Python程式碼執行。例如我們輸入：  
-a = 1  
-print(a)  
-運行之後輸出框中會列印出"1"。
-![image](https://github.com/kevin945290/AI_report/blob/main/3.png)
+![image](2.png)
 
-如果想去執行系統指令，只需要在指令前加感嘆號!。例如我們輸入：  
-!ls  
-![image](https://github.com/kevin945290/AI_report/blob/main/4.png)
+在開啟的對話方塊中選擇硬體加速器為GPU
 
-## 前期配置
-修改筆記本環境
-![image](https://github.com/kevin945290/AI_report/blob/main/5.png)
+![image](3.png)
 
-硬件類型從CPU改成GPU
-![image](https://github.com/kevin945290/AI_report/blob/main/6.png)
+這樣就可以使用Google提供的GPU了。 
 
-連接Google drive:首先在儲存格中輸入並執行以下命令，會出現2次校驗
-![image](https://github.com/kevin945290/AI_report/blob/main/7.png)
+## 2.連接谷歌硬碟
 
-會發現上面的程式碼的授權網站無法進入,因為版本過舊
-![image](https://github.com/kevin945290/AI_report/blob/main/8.png)
+Colab不會保存數據，這時候最好連接自己的Google硬碟。
 
-掛載Google Drive程式碼：
-![image](https://github.com/kevin945290/AI_report/blob/main/9.png)
+在筆記本中輸入下面的程式碼並運行。
 
-會發現上面的程式碼的授權網站也無法進入
-![image](https://github.com/kevin945290/AI_report/blob/main/A.png)
+![image](4.png)
+
+選擇要登入帳戶
+
+![image](5.png)
+
+允許Google Drive for desktop存取個人資訊，點選繼續
+
+![image](6.png)
+
+選取要讓Google Drive for desktop存取的範圍，點選全選後再點選繼續
+
+![image](7.png)
+
+谷歌硬碟連線成功後如下圖所示。
+
+![image](8.png)
+
+## 3.下載yolov5 
+
+資料集可以自己製作，也可以使用別人製作的。自己製作資料集的話可以使用labelimg，注意選擇輸出為yolo格式。這裡簡單起見使用網路上公開的資料集。網站（https://public.roboflow.com/）提供了許多用於目標檢測的公開資料集，例如常見的微軟COCO資料集，牛津Pets資料集等。這裡找個小型的口罩資料集，這個資料集規模很小，只有149張照片。 （呃，相對於COCO十幾萬張照片來說真的可以忽略不計了）
+
+![image](9.png)
 
 所以改用其他方式，一開始沒掛載雲端，如圖:
 ![image](https://github.com/kevin945290/AI_report/blob/main/B.png)
