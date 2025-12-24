@@ -48,46 +48,108 @@ Colab不會保存數據，這時候最好連接自己的Google硬碟。
 
 ![image](8.png)
 
-## 3.下載yolov5 
+## 3.下載yolov5
 
-資料集可以自己製作，也可以使用別人製作的。自己製作資料集的話可以使用labelimg，注意選擇輸出為yolo格式。這裡簡單起見使用網路上公開的資料集。網站（https://public.roboflow.com/）提供了許多用於目標檢測的公開資料集，例如常見的微軟COCO資料集，牛津Pets資料集等。這裡找個小型的口罩資料集，這個資料集規模很小，只有149張照片。 （呃，相對於COCO十幾萬張照片來說真的可以忽略不計了）
+建立新的程式碼區塊，在程式碼區塊中輸入下面的程式碼並執行。
 
 ![image](9.png)
 
-所以改用其他方式，一開始沒掛載雲端，如圖:
-![image](https://github.com/kevin945290/AI_report/blob/main/B.png)
+運行完畢後可以看到此時Colab 給分配了一個Tesla T4的顯示卡，顯存約15GB（15095MB）。PyTorch版本為2.9.0，CUDA版本為12.6。
 
-所以我們用了最新版本的掛載雲端方式，載入成功之後在左邊的檔案中多了一個dirve資料夾，如下圖:
-![image](https://github.com/kevin945290/AI_report/blob/main/C.png)
+註：Colab的顯示卡分配是隨機的，有時候分配K80，有時候分配T4，全看個人運氣。
 
-掛載完後，我們可以用命令"!ls"查看
-![image](https://github.com/kevin945290/AI_report/blob/main/D.png)
+## 4.上傳資料集 
 
-## 更改工作目錄
-在Colab中cd指令是無效的，切換工作目錄使用chdir函數，執行完後，目前工作目錄會進入drive資料夾下。我們再使用!ls指令會發現系統輸出的是drive資料夾下的目錄
-![image](https://github.com/kevin945290/AI_report/blob/main/E.png)
+資料集可以自己製作，也可以使用別人製作的。自己製作資料集的話可以使用labelimg，注意選擇輸出為yolo格式。這裡簡單起見使用網路上公開的資料集。網站[Roboflow 公開資料庫](https://public.roboflow.com/)提供了許多用於目標檢測的公開資料集，例如常見的微軟COCO資料集，牛津Pets資料集等。這裡找個小型的口罩資料集，這個資料集規模很小，只有149張照片。 （呃，相對於COCO十幾萬張照片來說真的可以忽略不計了）
 
-用" os.chdir('../') "，可回到上級目錄，執行完後，目前工作目錄會回到上級目錄。之後我們再使用!ls指令來觀察
-![image](https://github.com/kevin945290/AI_report/blob/main/F.png)
+![image](24.png)
 
-## 運行自己的程式碼
-### 1. 將.py檔案和其它必要的檔案上傳到Google Drive
-![image](https://github.com/kevin945290/AI_report/blob/main/G.png)
+點擊進去下載。
 
-### 2. 將工作目錄切換到.py檔案所在目錄
-![image](https://github.com/kevin945290/AI_report/blob/main/H.png)
+![image](10.png)
 
-### 3. 運行程式碼
-![image](https://github.com/kevin945290/AI_report/blob/main/I.png)
+選擇YOLO v5 PyTorch格式，如下圖所示
 
-### 4. 注意事項  
-Linux系統下檔案路徑使用'/'而不是'\'  
+![image](11.png)
 
-## 總結
-1.可以把Google Colab看成是一台有GPU或TPU的Ubuntu虛擬機，只不過我們只能用命令列的方式操作它。你可以選擇執行系統指令，也可以直接寫執行python程式碼。  
-2. 掛載完Google Drive，會在虛擬機器裡產生一個drive資料夾，直接將Google Drive當成是一塊硬碟即可。存取drive資料夾裡的文件，就是在存取你的Google Drive裡的文件。  
-3. Colab最多連續使用12小時，超過時間系統會強制掐斷正在運作的程式並收回佔用的虛擬機器。 （好像再次連接到虛擬機器後，虛擬機器是被清空的狀態，需要重新配置和安裝庫等等）
+下載完畢後將壓縮檔上傳到Google網盤，我這裡將壓縮檔改名為mask.zip，如下圖所示
 
+![image](12.png)
 
+新增程式碼區塊，輸入並執行下面的命令，將mask.zip檔案解壓縮到mask資料夾中，解壓縮完畢後目錄結構如下圖所示。
 
+![image](13.png)
 
+## 5.模型訓練 
+
+在進行訓練之前，需要修改一些參數。
+
+修改mask/data.yaml文件內容。主要是修改train及val的檔案路徑，這個根據yolov5的相對路徑進行修改
+
+![image](14.png)
+
+修改文件yolov5/models/yolov5s.yaml，將nc = 80修改為nc = 2，因為資料集中只有mask和no-mask2個類別，這裡需要與資料集類別數保持一致
+
+![image](15.png)
+
+新增並運行程式碼區塊進行訓練，就會發現Colab環境中缺少ultralytics函式庫。雖然運行的是YOLOv5，但較新版本的YOLOv5 程式碼引用了ultralytics提供的工具函數
+
+![image](16.png)
+
+所以為了避免後續出現其他類似的ModuleNotFoundError（例如缺少pandas、requests等），建議直接安裝YOLOv5資料夾下自帶的依賴清單：
+
+![image](17.png)
+
+解決了ModuleNotFoundError，程式碼已經可以跑起來了，但目前控制台停在了W&B (Weights & Biases)的登入提示介面。 W&B 是一個用於記錄訓練實驗、查看損失曲線和預測樣本的線上工具。
+
+你需要做的操作：
+在Colab 的輸入框中輸入數字並按enter：
+
+輸入1：如果你想註冊/登入W&B 帳號。它會給你一個鏈接，複製裡面的API Key 貼回來即可。這樣你可以在網頁上即時看到漂亮的訓練圖表。
+
+輸入2：如果你已有帳號。
+
+輸入3：（推薦初學者）如果你現在只想趕緊開始訓練，不想配置帳號，輸入3然後按回車。系統將不會上傳資料到雲端，只在本機上保存日誌。
+
+我們直接輸入3，正常來說就能正常開始跑進度條
+
+![image](18.png)
+
+再來就會發現格式錯誤（Syntax Error）。現在的問題出在你的資料集設定檔 ../mask/data.yaml上。
+
+![image](19.png)
+
+錯誤訊息yaml.scanner.ScannerError: mapping values are not allowed here並且指向Line 2, Column 6，通常只有兩個原因：
+
+縮排錯誤（最可能）：第2 行前面多了空格，導致沒有和第1 行對齊。 YAML 檔案對縮排非常敏感，不能隨便按空格或Tab。
+
+冒號後缺空格：像key:value這樣寫是錯的，必須寫成key: value（冒號後面必須有一個空格）。
+
+這時候我們直接使用快速修復方案（直接覆蓋重寫）
+如果你確定你的資料集路徑結構是標準的（例如mask/train和mask/val），你可以直接運行下面的Python 程式碼，它會幫你產生一個格式完全正確的data.yaml覆蓋掉那個壞檔案，並請根據你的實際類別修改names和nc
+
+![image](20.png)
+
+運行完上面的修復程式碼後，就可以再次執行訓練指令了，訓練完畢後出現如下圖提示。
+
+![image](21.png)
+
+訓練得到的權重檔案存放在 runs/train/exp4/weights/ 資料夾中（對應表現最佳的 YOLOv5s 模型），通常使用 best.pt 檔案進行後續檢測
+
+## 6.測試模型
+
+上網隨便找張有口罩的圖片
+
+![image](mask.jpg)
+
+將圖片上傳到Colab中，重新命名為mask.jpg（什麼名字都可以，這裡只是方便後面描述），將檔案放到yolov5資料夾中。
+
+![image](22.png)
+
+添加並運行下面的程式碼，輸出結果如下圖所示。結果提示辨識到了3個戴口罩，2個未戴口罩。
+
+![image](23.png)
+
+識別後的結果存放在資料夾runs/detect/exp中。打開該資料夾中的mask.jpg文件，識別結果如下圖所示。
+
+![image](23.png)
